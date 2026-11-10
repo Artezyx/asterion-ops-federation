@@ -1,0 +1,146 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "shell": {
+      "projectType": "application",
+      "root": "projects/shell",
+      "sourceRoot": "projects/shell/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/native-federation-v4:build",
+          "options": {
+            "target": "shell:esbuild:production"
+          },
+          "configurations": {
+            "development": {
+              "target": "shell:esbuild:development",
+              "dev": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation-v4:build",
+          "options": {
+            "target": "shell:serve-original:development",
+            "dev": true,
+            "port": 4200
+          }
+        },
+        "esbuild": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/shell",
+            "index": "projects/shell/src/index.html",
+            "browser": "projects/shell/src/main.ts",
+            "polyfills": [
+              "zone.js",
+              "es-module-shims"
+            ],
+            "tsConfig": "projects/shell/tsconfig.app.json",
+            "styles": [
+              "projects/shell/src/styles.css"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/shell/public",
+                "output": "/"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          }
+        },
+        "serve-original": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "shell:esbuild:development",
+            "port": 4200
+          }
+        }
+      }
+    },
+    "workflow": {
+      "projectType": "application",
+      "root": "projects/workflow",
+      "sourceRoot": "projects/workflow/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/native-federation-v4:build",
+          "options": {
+            "target": "workflow:esbuild:production"
+          },
+          "configurations": {
+            "development": {
+              "target": "workflow:esbuild:development",
+              "dev": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation-v4:build",
+          "options": {
+            "target": "workflow:serve-original:development",
+            "dev": true,
+            "port": 4201
+          }
+        },
+        "esbuild": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/workflow",
+            "index": "projects/workflow/src/index.html",
+            "browser": "projects/workflow/src/main.ts",
+            "polyfills": [
+              "zone.js",
+              "es-module-shims"
+            ],
+            "tsConfig": "projects/workflow/tsconfig.app.json",
+            "styles": [
+              "projects/workflow/src/styles.css"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/workflow/public",
+                "output": "/"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          }
+        },
+        "serve-original": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "workflow:esbuild:development",
+            "port": 4201
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

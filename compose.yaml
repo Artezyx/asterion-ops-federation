@@ -1,0 +1,26 @@
+services:
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD}
+    ports: ["14335:1433"]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" >/dev/null 2>&1
+      interval: 10s
+      retries: 20
+    volumes: ["sql-data:/var/opt/mssql"]
+  api:
+    build: ./backend/Asterion.Api
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Main: Server=sql;Database=AsterionOps;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True
+    ports: ["5080:8080"]
+    depends_on:
+      sql: { condition: service_healthy }
+volumes:
+  sql-data:
