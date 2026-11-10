@@ -1,14 +1,12 @@
 using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddOpenApi();
 builder.Services.AddSingleton<TicketStore>();
 builder.Services.AddCors(options => options.AddPolicy("frontend", policy =>
     policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
         .AllowAnyHeader().AllowAnyMethod()));
 var app = builder.Build();
 app.UseCors("frontend");
-app.MapOpenApi();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapGet("/api/tickets", (TicketStore store) => Results.Ok(store.All()));
 app.MapPost("/api/tickets", (CreateTicket request, TicketStore store) =>
