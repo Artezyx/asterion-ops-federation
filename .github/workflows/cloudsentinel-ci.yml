@@ -1,0 +1,32 @@
+name: CloudSentinel reliability checks
+on:
+  push:
+    paths:
+      - 'labs/cloudsentinel/**'
+      - '.github/workflows/cloudsentinel-ci.yml'
+  pull_request:
+    paths:
+      - 'labs/cloudsentinel/**'
+      - '.github/workflows/cloudsentinel-ci.yml'
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Verify SLO monitoring
+        working-directory: labs/cloudsentinel/monitor
+        run: |
+          python -m compileall -q .
+          python -m unittest discover -p 'test_*.py' -v
+          python slo.py --input sample.csv
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: '1.10.5' }
+      - name: Check Terraform format
+        working-directory: labs/cloudsentinel/terraform
+        run: terraform fmt -check
