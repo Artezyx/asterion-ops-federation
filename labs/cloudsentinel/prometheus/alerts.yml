@@ -1,0 +1,15 @@
+groups:
+  - name: asterion-slo
+    rules:
+      - alert: AsterionHighServerErrorRate
+        expr: sum(rate(http_server_request_duration_seconds_count{service="asterion",http_response_status_code=~"5.."}[5m])) / clamp_min(sum(rate(http_server_request_duration_seconds_count{service="asterion"}[5m])), 0.001) > 0.01
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "Asterion 5xx error rate exceeded 1% over 5 minutes"
+      - alert: AsterionUnavailable
+        expr: up{job="asterion-api"} == 0
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          summary: "Asterion API target unavailable"
