@@ -61,3 +61,6 @@ CI builds independently. Tests target state transitions; a full end-to-end brows
 Angular 17+ / microfrontends / TypeScript / .NET / REST / EF Core / SQL Server / Docker / CI. Jira is a delivery tool, not an app feature; project tasks are documented in `docs/BACKLOG.md`.
 
 **Portfolio code, not a production deployment.** Authentication, authorization, TLS, migrations, and observability require environment-specific hardening.
+
+## JWT authorization enhancement
+The API now rejects unauthenticated requests; read/write scopes protect tickets and audits. The remote Angular workflow accepts a temporary token only in memory. Supply `Auth__SigningKey` (minimum 32 random bytes) to the API service and a test-issued token; details in [SECURITY_AND_LOAD.md](docs/SECURITY_AND_LOAD.md). Example unauthenticated curl commands above must now include a bearer token.
